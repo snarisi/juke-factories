@@ -12,6 +12,7 @@
   <script src="/js/controllers/albums.js" defer></script>
   <script src="/js/controllers/sidebar.js" defer></script>
   <script src="/js/controllers/all-artists.js" defer></script>
+  <script src="/js/controllers/one-artist.js" defer></script>
   <script src="/js/factories/stats-factory.js" defer></script>
   <script src="/js/factories/player.js" defer></script>
 </head>
@@ -52,13 +53,25 @@
             </div>
         </div>
 
-        <div>
+        <div ng-show="showArtists" ng-controller="AllArtistsCtrl">
             <h3>Artists</h3>
             <div class="list-group">
                 <div class="list-group-item" ng-repeat="artist in artists">
-                    <a href="#">{{ artist.name }}</a>
+                    <a href="#" ng-click="showOneArtist(artist._id)">{{ artist.name }}</a>
                 </div>
             </div>
+        </div>
+
+        <div ng-show="showOneArtist" ng-controller="OneArtistCtrl">
+            <h3>{{artist.name}}</h3>
+            <h4>ALBUMS</h4>
+              <h5 ng-repeat="album in artist.albums">
+                <span>{{album.name}}</span>
+              </h5> 
+            <h4>SONGS</h4>
+              <h5 ng-repeat="song in artist.songs">
+                <span>{{song.name}}</span>
+              </h5>
         </div>
 
         <div ng-show="showOneAlbum" class="album" ng-controller="AlbumCtrl">

@@ -22,7 +22,7 @@ app.controller('AlbumCtrl', function($scope, $http, $rootScope, StatsFactory, Pl
 //  function next () { skip(1); };
 //  function prev () { skip(-1); };
   $rootScope.$on('viewSwap', function(e, val, albumId) {
-    if (val === 'allAlbums') return $scope.showOneAlbum = false;
+    if (val !== 'oneAlbum') return $scope.showOneAlbum = false;
     
     $http.get('/api/albums/' + albumId)
     .then(res => res.data)

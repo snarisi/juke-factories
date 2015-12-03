@@ -14,7 +14,7 @@ app.controller('AllAlbumsCtrl', function ($http, $scope, $rootScope) {
   
   $rootScope.$on('viewSwap', function (e, val) {
     if (val === 'allAlbums') $scope.showAlbums = true;
-    else if (val === 'oneAlbum') $scope.showAlbums = false;
+    else $scope.showAlbums = false;
   });
     
   $scope.showAlbum = function (albumId) {
