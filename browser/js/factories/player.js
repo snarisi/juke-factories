@@ -1,4 +1,4 @@
-app.factory('PlayerFactory', function() {
+app.factory('PlayerFactory', function($rootScope) {
 	var tools = {}; 
   var playStatus = false; 
   var currentSong; 
@@ -11,7 +11,7 @@ app.factory('PlayerFactory', function() {
   });
   audio.addEventListener('timeupdate', function () {
     progress = 100 * audio.currentTime / audio.duration;
-    // $scope.$digest();
+     $rootScope.$digest();
   });
 
   var pause = function() {
@@ -63,5 +63,6 @@ app.factory('PlayerFactory', function() {
 
   tools.previous = function() {
   }; 
-	return tools; 
+  
+  return tools; 
 })

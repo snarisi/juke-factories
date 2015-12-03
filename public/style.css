@@ -1,6 +1,10 @@
 * {
   box-sizing: border-box; }
 
+html {
+  overflow-y: scroll;
+}
+
 body {
   background: #222222;
   padding-bottom: 56px; }
