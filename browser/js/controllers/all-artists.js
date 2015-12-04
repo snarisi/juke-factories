@@ -1,14 +1,10 @@
-app.controller('AllArtistsCtrl', function ($http, $scope, $rootScope) {
+app.controller('AllArtistsCtrl', function ($http, $scope, $rootScope, ArtistFactory) {
 
 	$scope.showArtists = false; 
-
-	$http.get('/api/artists')
-		.then(res => res.data)
-    .then(function(artists) {
-      $scope.artists = artists; 
-    })
-    .catch(console.error.bind(console)); 
-
+  
+    ArtistFactory.fetchAllArtists()
+      .then(artists => $scope.artists = artists)
+  
   $rootScope.$on('viewSwap', function(evt, val) {
     if(val === 'allArtists') $scope.showArtists = true; 
     else $scope.showArtists = false; 

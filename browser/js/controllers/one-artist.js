@@ -1,30 +1,31 @@
-app.controller('OneArtistCtrl', function($q, $http, $scope, $rootScope) {
+app.controller('OneArtistCtrl', function($q, $http, $scope, $rootScope, PlayerFactory, SongFactory, AlbumFactory, ArtistFactory) {
 
 	$scope.showOneArtist = false;
 
+    $scope.currentSong = PlayerFactory.getCurrentSong; 
+    $scope.playing = PlayerFactory.isPlaying; 
+    $scope.toggle = PlayerFactory.toggle; 
+  
+  
 	$rootScope.$on('viewSwap', function(e, val, artistId) {
 		if(val !== 'oneArtist') return $scope.showOneArtist = false; 
 
-		var getArtist = $http.get('/api/artists/' + artistId)
-			.then(res => res.data)
-      .catch(console.error.bind(console)); 
+        var getArtist = ArtistFactory.fetchArtistById(artistId);
+        var getSongs = SongFactory.fetchAllSongs(artistId);
+        var getAlbums = AlbumFactory.fetchByArtistId(artistId);
 
-    var getSongs = $http.get('/api/artists/' + artistId +'/songs')
-      .then(res => res.data)
-      .catch(console.error.bind(console)); 
-
-    var getAlbums = $http.get('/api/artists/' + artistId + '/albums')
-      .then(res => res.data)
-      .catch(console.error.bind(console)); 
-
-    $q.all([getArtist, getSongs, getAlbums])
-      .then(function(dataArr) { 
-        console.log(dataArr)
-        $scope.artist = dataArr[0]; 
-        $scope.artist.songs = dataArr[1]; 
-        $scope.artist.albums = dataArr[2]; 
-        $scope.showOneArtist = true; 
-      })
+        $q.all([getArtist, getSongs, getAlbums])
+          .then(function(dataArr) { 
+            console.log(dataArr)
+            $scope.artist = dataArr[0]; 
+            $scope.artist.songs = dataArr[1]; 
+            $scope.artist.albums = dataArr[2]; 
+            $scope.showOneArtist = true;
+          })
 
 	}) 
+
+    $scope.showAlbum = function (albumId) {
+      $rootScope.$broadcast('viewSwap', 'oneAlbum', albumId);
+    };
 }); 
