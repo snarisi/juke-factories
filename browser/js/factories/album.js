@@ -1,20 +1,29 @@
-app.factory('AlbumFactory', function ($http, StatsFactory, SongFactory) {
+app.factory('AlbumFactory', function ($http, StatsFactory, SongFactory, Cache, $q) {
   
   var exports = {};
+  var albumCache = {};
+  var allAlbumCache = {};
   
   var getAlbumUrls = function (albums) {
     albums.forEach(function (album) {
       album.imageUrl = '/api/albums/' + album._id + '.image';
     })
   }
-  
+    
   exports.fetchAll = function () {
-    //fetch all albums
-    //return promise for albums.data
+    Cache.cleanCache(allAlbumCache, 1);
+    
+    if (allAlbumCache.albums) {
+      console.log(allAlbumCache);
+      return Cache.returnCache(allAlbumCache.albums)
+        .catch(console.error.bind(console));
+    }
+        
     return $http.get('/api/albums')
       .then(res => res.data)
       .then(albums => {
         getAlbumUrls(albums);
+        allAlbumCache.albums = albums;
         return albums;
       })
       .catch(console.error.bind(console));

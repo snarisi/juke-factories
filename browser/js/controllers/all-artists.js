@@ -2,16 +2,17 @@ app.controller('AllArtistsCtrl', function ($http, $scope, $rootScope, ArtistFact
 
 	$scope.showArtists = false; 
   
-    ArtistFactory.fetchAllArtists()
-      .then(artists => $scope.artists = artists)
   
   $rootScope.$on('viewSwap', function(evt, val) {
-    if(val === 'allArtists') $scope.showArtists = true; 
-    else $scope.showArtists = false; 
-  })
+    if(val !== 'allArtists') return $scope.showArtists = false;
+      
+    $scope.showArtists = true; 
+    ArtistFactory.fetchAllArtists()
+      .then(artists => $scope.artists = artists)     
+  });
 
   $scope.showOneArtist = function(artistID) {
     $rootScope.$broadcast('viewSwap', 'oneArtist', artistID); 
-  }
+  };
 
 })

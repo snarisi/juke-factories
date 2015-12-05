@@ -1,4 +1,4 @@
-app.factory('PlayerFactory', function($rootScope) {
+app.factory('PlayerFactory', function($rootScope, Cache) {
   var tools = {}; 
   var playStatus = false; 
   var currentSong; 
@@ -18,22 +18,13 @@ app.factory('PlayerFactory', function($rootScope) {
 			progress = 100 * audio.currentTime / audio.duration;
 			$rootScope.$digest();
 		});
-
+		
+		audio.timeStamp = Date.now();
 		audio.src = url;
 		audio.load();
 		return audio;
 	}
-
-//  // initialize audio player
-//  var audio = document.createElement('audio');
-//  audio.addEventListener('ended', function () {
-//    tools.next();
-//  });
-//  audio.addEventListener('timeupdate', function () {
-//    progress = 100 * audio.currentTime / audio.duration;
-//     $rootScope.$digest();
-//  });
-
+	
   var pause = function() {
     if (currentAudio) currentAudio.pause();
     playStatus = false;
@@ -43,12 +34,13 @@ app.factory('PlayerFactory', function($rootScope) {
     // stop existing audio (e.g. other song) in any case
     pause();
     playStatus = true;
-    // resume current song
-    // if (song === tools.currentSong) return audio.play();
-    // enable loading new song
-    if (!songCache[song._id]) songCache[song._id] = makeAudio(song.audioUrl);
 	  
-    currentSong = song;
+	//clean old songs from cache
+	Cache.cleanCache(songCache, 1);
+
+	if (!songCache[song._id]) songCache[song._id] = makeAudio(song.audioUrl);
+
+	currentSong = song;
 	currentAudio = songCache[song._id];
 	currentAudio.currentTime = 0;
     currentAudio.play();

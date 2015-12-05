@@ -2,14 +2,15 @@ app.controller('AllAlbumsCtrl', function ($http, $scope, $rootScope, AlbumFactor
   
   $scope.showAlbums = false;
   
-  AlbumFactory.fetchAll()
-    .then(function (albums) {
-      $scope.albums = albums;
-    });
-    
   $rootScope.$on('viewSwap', function (e, val) {
-    if (val === 'allAlbums') $scope.showAlbums = true;
-    else $scope.showAlbums = false;
+    if (val !== 'allAlbums') return $scope.showAlbums = false;
+    
+    $scope.showAlbums = true;
+
+    AlbumFactory.fetchAll()
+      .then(function (albums) {
+        $scope.albums = albums;
+      });
   });
     
   $scope.showAlbum = function (albumId) {
